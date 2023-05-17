@@ -5,6 +5,8 @@
 
 Automatically detect and collect external links in the packaged file, and promote it to the top of the head of index.html to generate dns-prefetch, so that dns can be parsed earlier
 
+![demo](/assets/demo.gif)
+
 ## :coffee:
 
 [buy me a cup of coffee](https://github.com/Simon-He95/sponsor)
