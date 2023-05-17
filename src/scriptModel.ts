@@ -1,0 +1,135 @@
+import fs from 'node:fs'
+import * as vscode from 'vscode'
+import { nanoid } from 'nanoid'
+import type { ExtensionContext, TreeItemLabel } from 'vscode'
+import { readGlob } from './common'
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const YAML = require('yamljs')
+
+export class TodoItem extends vscode.TreeItem {
+  constructor(
+    public readonly label: string | TreeItemLabel,
+    public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+  ) {
+    super(label, collapsibleState)
+  }
+}
+
+// todo: 修改一下图标样式
+export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
+  private _onDidChangeTreeData: vscode.EventEmitter<TodoItem | undefined | void> = new vscode.EventEmitter<TodoItem | undefined | void>()
+  readonly onDidChangeTreeData: vscode.Event<TodoItem | undefined | void> = this._onDidChangeTreeData.event
+
+  private scripts: any[] = []
+  private projectPath: string
+  id = '0'
+  extensionContext: ExtensionContext
+  constructor(extensionContext: ExtensionContext, projectPath: string) {
+    this.extensionContext = extensionContext
+    this.projectPath = projectPath
+  }
+
+  async #init() {
+    // 判断当前目录下是否有package.json
+    const pkg = `${this.projectPath}/package.json`
+    const pnpmworkspace = `${this.projectPath}/pnpm-workspace.yaml`
+    if (!fs.existsSync(pkg)) {
+      const treeItem = new TodoItem('未找到可执行的命令', vscode.TreeItemCollapsibleState.None) as any
+      treeItem.id = nanoid()
+      treeItem.iconPath = {
+        light: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/light/404.svg')),
+        dark: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/dark/404.svg')),
+      }
+      return [treeItem]
+    }
+    // 首先加入pkg
+    try {
+      const pkgJSON = JSON.parse(await fs.promises.readFile(pkg, 'utf8'))
+      const { name, scripts, workspace } = pkgJSON
+      let cli: 'npm' | 'yarn' | 'pnpm' = 'npm'
+      if (workspace) {
+        // 如果存在workspace，用yarn来处理
+        cli = 'yarn'
+        const _workspace = Array.isArray(workspace)
+          ? workspace
+          : workspace.packages ?? []
+        if (_workspace.length) {
+          const data = await readGlob(_workspace, this.projectPath)
+          this.scripts.push(...Object.keys(data).map(name => this.#createRoot(data[name], name, 'workspace', cli)))
+        }
+      }
+      else if (fs.existsSync(pnpmworkspace)) {
+        // 判断是否是pnpm workspace
+        cli = 'pnpm'
+        const _workspace = YAML.parse(await fs.promises.readFile(pnpmworkspace, 'utf-8'))?.packages || []
+        if (_workspace.length) {
+          const data = await readGlob(_workspace, this.projectPath)
+          this.scripts.push(...Object.keys(data).map(name => this.#createRoot(data[name], name, 'workspace', cli)))
+        }
+      }
+      if (scripts) {
+        // 如果有scripts再做处理
+        this.scripts.unshift(this.#createRoot(scripts, name, 'root', cli))
+      }
+      return this.scripts
+    }
+    catch (error: any) {
+      vscode.window.showErrorMessage(error.message)
+    }
+    // const add = '添加你的计划'
+    // const treeItem = new TodoItem(add, vscode.TreeItemCollapsibleState.None) as any
+    // treeItem.command = {
+    //   command: 'todoList.addTodo',
+    //   title: add,
+    //   tooltip: add,
+    // }
+
+    // return treeItem
+  }
+
+  #createRoot(scripts: Record<string, string>, name: string, type: 'root' | 'workspace', cli: 'pnpm' | 'npm' | 'yarn' = 'npm') {
+    const treeItem = new TodoItem(name ? `${type}: ${name}` : type, vscode.TreeItemCollapsibleState.Expanded)
+    treeItem.iconPath = {
+      light: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/light/npm.svg')),
+      dark: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/dark/npm.svg')),
+    }
+    const temp = {
+      id: 'root',
+      treeItem,
+      children: Object.keys(scripts).map((key) => {
+        const value = scripts[key]
+        const label = `${key}: ${value}`
+        const item = new TodoItem({ label, highlights: [[0, key.length]] }, vscode.TreeItemCollapsibleState.None) as any
+        item.id = nanoid()
+        item.iconPath = {
+          light: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/light/run.svg')),
+          dark: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/dark/run.svg')),
+        }
+        item.command = {
+          command: 'vscode-scripts.run',
+          tooltip: label,
+          arguments: [key, cli, type === 'root' ? undefined : name],
+        }
+        return item
+      }),
+    }
+    return temp
+  }
+
+  refresh(): void {
+    this._onDidChangeTreeData.fire()
+  }
+
+  getTreeItem(element: any): vscode.TreeItem {
+    return element.id === 'root' ? element.treeItem : element
+  }
+
+  getChildren(element?: any): Thenable<TodoItem[]> {
+    if (element)
+      return element.children
+
+    else
+      return this.#init() as any
+  }
+}
