@@ -2,10 +2,7 @@ import fs from 'node:fs'
 import * as vscode from 'vscode'
 import { nanoid } from 'nanoid'
 import type { ExtensionContext, TreeItemLabel } from 'vscode'
-import { readGlob } from './common'
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const YAML = require('yamljs')
+import { parserYAML, readGlob } from './common'
 
 export class TodoItem extends vscode.TreeItem {
   constructor(
@@ -59,10 +56,12 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
           this.scripts.push(...Object.keys(data).map(name => this.#createRoot(data[name], name, 'workspace', cli)))
         }
       }
-      else if (fs.existsSync(pnpmworkspace)) {
+      else
+      if (fs.existsSync(pnpmworkspace)) {
         // 判断是否是pnpm workspace
         cli = 'pnpm'
-        const _workspace = YAML.parse(await fs.promises.readFile(pnpmworkspace, 'utf-8'))?.packages || []
+        const content = await fs.promises.readFile(pnpmworkspace, 'utf-8')
+        const _workspace = parserYAML(content)
         if (_workspace.length) {
           const data = await readGlob(_workspace, this.projectPath)
           this.scripts.push(...Object.keys(data).map(name => this.#createRoot(data[name], name, 'workspace', cli)))

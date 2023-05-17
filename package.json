@@ -69,9 +69,6 @@
     "typecheck": "tsc --noEmit",
     "release": "bumpp && pnpm run publish"
   },
-  "dependencies": {
-    "lazy-js-utils": "^0.0.54"
-  },
   "devDependencies": {
     "@antfu/eslint-config": "^0.38.4",
     "@types/node": "^18.15.11",
@@ -87,7 +84,6 @@
     "typescript": "^5.0.3",
     "vite": "^4.2.1",
     "vitest": "^0.29.8",
-    "vsce": "^2.15.0",
-    "yamljs": "^0.3.0"
+    "vsce": "^2.15.0"
   }
 }
