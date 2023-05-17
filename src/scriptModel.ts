@@ -102,9 +102,10 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
         const label = `${key}: ${value}`
         const item = new TodoItem({ label, highlights: [[0, key.length]] }, vscode.TreeItemCollapsibleState.None) as any
         item.id = nanoid()
+
         item.iconPath = {
-          light: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/light/run.svg')),
-          dark: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/dark/run.svg')),
+          light: vscode.Uri.file(this.extensionContext.asAbsolutePath(`assets/light/run${Math.floor(Math.random() * 10) + 1}.svg`)),
+          dark: vscode.Uri.file(this.extensionContext.asAbsolutePath(`assets/light/run${Math.floor(Math.random() * 10) + 1}.svg`)),
         }
         item.command = {
           command: 'vscode-scripts.run',
