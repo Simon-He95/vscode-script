@@ -77,15 +77,6 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
     catch (error: any) {
       vscode.window.showErrorMessage(error.message)
     }
-    // const add = '添加你的计划'
-    // const treeItem = new TodoItem(add, vscode.TreeItemCollapsibleState.None) as any
-    // treeItem.command = {
-    //   command: 'todoList.addTodo',
-    //   title: add,
-    //   tooltip: add,
-    // }
-
-    // return treeItem
   }
 
   #createRoot(scripts: Record<string, string>, name: string, type: 'root' | 'workspace', cli: 'pnpm' | 'npm' | 'yarn' = 'npm') {

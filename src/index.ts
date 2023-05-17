@@ -7,6 +7,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const projectPath = workspaceFolders[0].uri.fsPath
     const todoDataProvider = new ScriptProvider(context, projectPath)
     context.subscriptions.push(vscode.window.registerTreeDataProvider('vscode-scripts.id', todoDataProvider))
+    context.subscriptions.push(vscode.commands.registerCommand('vscode-icones.switch', () => vscode.commands.executeCommand('workbench.view.extension.vscode-scripts.id')))
     context.subscriptions.push(vscode.commands.registerCommand('vscode-scripts.run', async (script, env: 'npm' | 'yarn' | 'pnpm', workspaceName: string) => {
       let runCommand = ''
       if (!workspaceName) {

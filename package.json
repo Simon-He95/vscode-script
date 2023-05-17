@@ -1,10 +1,10 @@
 {
   "publisher": "simonhe",
   "name": "vscode-script",
-  "displayName": "vscode-script",
+  "displayName": "vscode script",
   "version": "0.0.0",
   "packageManager": "pnpm@8.1.1",
-  "description": "vscode-script",
+  "description": "vscode run script",
   "author": "Simon He <https://github.com/Simon-He95>",
   "license": "MIT",
   "funding": "https://github.com/sponsors/Simon-He95",
@@ -50,7 +50,13 @@
           "name": "npm scripts"
         }
       ]
-    }
+    },
+    "commands": [
+      {
+        "command": "vscode-icones.switch",
+        "title": "npm scripts"
+      }
+    ]
   },
   "scripts": {
     "dev": "pnpm build --watch",
