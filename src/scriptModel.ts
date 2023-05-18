@@ -79,23 +79,30 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
   }
 
   #createRoot(scripts: Record<string, string>, name: string, type: 'root' | 'workspace', cli: 'pnpm' | 'npm' | 'yarn' = 'npm') {
-    const treeItem = new TodoItem(name ? `${type}: ${name}` : type, vscode.TreeItemCollapsibleState.Expanded)
+    // workspace默认不展开
+    const treeItem = new TodoItem(
+      name
+        ? `[${type}]: ${name}`
+        : type,
+      type === 'root'
+        ? vscode.TreeItemCollapsibleState.Expanded
+        : vscode.TreeItemCollapsibleState.Collapsed)
     treeItem.iconPath = {
-      light: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/light/npm.svg')),
-      dark: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/dark/npm.svg')),
+      light: vscode.Uri.file(this.extensionContext.asAbsolutePath(`assets/light/${type === 'root' ? 'npm' : 'pnpm'}.svg`)),
+      dark: vscode.Uri.file(this.extensionContext.asAbsolutePath(`assets/dark/${type === 'root' ? 'npm' : 'pnpm'}.svg`)),
     }
     const temp = {
       id: 'root',
       treeItem,
       children: Object.keys(scripts).map((key) => {
         const value = scripts[key]
-        const label = `${key}: ${value}`
-        const item = new TodoItem({ label, highlights: [[0, key.length]] }, vscode.TreeItemCollapsibleState.None) as any
+        const label = `${key} 🔛 ${value}`
+        const item = new TodoItem({ label, highlights: [[0, 0]] }, vscode.TreeItemCollapsibleState.None) as any
         item.id = nanoid()
 
         item.iconPath = {
-          light: vscode.Uri.file(this.extensionContext.asAbsolutePath(`assets/light/run${Math.floor(Math.random() * 10) + 1}.svg`)),
-          dark: vscode.Uri.file(this.extensionContext.asAbsolutePath(`assets/light/run${Math.floor(Math.random() * 10) + 1}.svg`)),
+          light: vscode.Uri.file(this.extensionContext.asAbsolutePath(`assets/light/run${Math.floor(Math.random() * 14) + 1}.svg`)),
+          dark: vscode.Uri.file(this.extensionContext.asAbsolutePath(`assets/light/run${Math.floor(Math.random() * 14) + 1}.svg`)),
         }
         item.command = {
           command: 'vscode-scripts.run',
