@@ -8,29 +8,32 @@ export async function activate(context: vscode.ExtensionContext) {
     const todoDataProvider = new ScriptProvider(context, projectPath)
     context.subscriptions.push(vscode.window.registerTreeDataProvider('vscode-scripts.id', todoDataProvider))
     context.subscriptions.push(vscode.commands.registerCommand('vscode-icones.switch', () => vscode.commands.executeCommand('workbench.view.extension.scripts')))
-    context.subscriptions.push(vscode.commands.registerCommand('vscode-scripts.run', async (script, env: 'npm' | 'yarn' | 'pnpm', workspaceName: string) => {
+    context.subscriptions.push(vscode.commands.registerCommand('vscode-scripts.run', async (script, env: 'npm' | 'yarn' | 'pnpm', workspaceName: string, _projectPath: string) => {
       let runCommand = ''
+      if (projectPath !== _projectPath)
+        runCommand += `cd ${_projectPath} && `
+
       if (!workspaceName) {
-      // 根据当前环境执行npm ｜ yarn ｜ pnpm
+        // 根据当前环境执行npm ｜ yarn ｜ pnpm
         switch (env) {
           case 'npm':
-            runCommand = `npm run ${script}`
+            runCommand += `npm run ${script}`
             break
           case 'yarn':
-            runCommand = `yarn ${script}`
+            runCommand += `yarn ${script}`
             break
           case 'pnpm':
-            runCommand = `pnpm ${script}`
+            runCommand += `pnpm ${script}`
             break
         }
       }
       else {
         switch (env) {
           case 'yarn':
-            runCommand = `yarn workspace ${workspaceName} ${script}`
+            runCommand += `yarn workspace ${workspaceName} ${script}`
             break
           case 'pnpm':
-            runCommand = `pnpm --filter="${workspaceName}" ${script}`
+            runCommand += `pnpm --filter="${workspaceName}" ${script}`
             break
         }
       }

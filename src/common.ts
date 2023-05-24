@@ -38,7 +38,7 @@ export async function readGlob(packages: string[], cwd: string) {
 
 export function parserYAML(str: string) {
   const result: string[] = []
-  for (const match of str.matchAll(/\n\s{2}- ['"]?([^\s"']+)/g)) {
+  for (const match of str.matchAll(/\n\s+- ['"]?([^\s"']+)/g)) {
     if (!match)
       continue
     result.push(match[1])

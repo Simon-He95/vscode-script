@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import * as vscode from 'vscode'
 import { nanoid } from 'nanoid'
 import type { ExtensionContext, TreeItemLabel } from 'vscode'
+import fg from 'fast-glob'
 import { parserYAML, readGlob } from './common'
 
 export class TodoItem extends vscode.TreeItem {
@@ -20,6 +21,7 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
 
   private scripts: any[] = []
   private projectPath: string
+  private relativePath: string
   id = '0'
   extensionContext: ExtensionContext
   constructor(extensionContext: ExtensionContext, projectPath: string) {
@@ -29,20 +31,35 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
 
   async #init() {
     // 判断当前目录下是否有package.json
-    const pkg = `${this.projectPath}/package.json`
-    const pnpmworkspace = `${this.projectPath}/pnpm-workspace.yaml`
+    let pkg = `${this.projectPath}/package.json`
+    let pnpmworkspace = `${this.projectPath}/pnpm-workspace.yaml`
+
     if (!fs.existsSync(pkg)) {
-      const treeItem = new TodoItem('未找到可执行的命令', vscode.TreeItemCollapsibleState.None) as any
-      treeItem.id = nanoid()
-      treeItem.iconPath = {
-        light: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/light/404.svg')),
-        dark: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/dark/404.svg')),
+      // 只获取最多4层深度
+      const entries = await fg(
+        '**/package.json',
+        { dot: true, ignore: ['**/node_modules/**'], cwd: this.projectPath, deep: 4 },
+      )
+      if (entries.length === 0) {
+        const treeItem = new TodoItem('未找到可执行的命令', vscode.TreeItemCollapsibleState.None) as any
+        treeItem.id = nanoid()
+        treeItem.iconPath = {
+          light: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/light/404.svg')),
+          dark: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/dark/404.svg')),
+        }
+        return [treeItem]
       }
-      return [treeItem]
+      else {
+        this.relativePath = entries[0]
+        pkg = `${this.projectPath}/${entries[0]}`
+        this.projectPath = pkg.split('/').slice(0, -1).join('/')
+        pnpmworkspace = `${this.projectPath}/pnpm-workspace.yaml`
+      }
     }
     // 首先加入pkg
     try {
       const pkgJSON = JSON.parse(await fs.promises.readFile(pkg, 'utf8'))
+      this.relativePath = `${this.projectPath.split('/').slice(-1)[0]}/package.json`
       const { name, scripts, workspace } = pkgJSON
       let cli: 'npm' | 'yarn' | 'pnpm' = 'npm'
       if (workspace) {
@@ -83,7 +100,7 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
     const treeItem = new TodoItem(
       name
         ? `[${type}]: ${name}`
-        : type,
+        : `[${type}]: ${this.relativePath}`,
       type === 'root'
         ? vscode.TreeItemCollapsibleState.Expanded
         : vscode.TreeItemCollapsibleState.Collapsed)
@@ -107,7 +124,7 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
         item.command = {
           command: 'vscode-scripts.run',
           tooltip: label,
-          arguments: [key, cli, type === 'root' ? undefined : name],
+          arguments: [key, cli, type === 'root' ? undefined : name, this.projectPath],
         }
         return item
       }),
