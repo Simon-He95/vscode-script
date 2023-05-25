@@ -21,7 +21,7 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
 
   private scripts: any[] = []
   private projectPath: string
-  private relativePath: string
+  private relativePath = ''
   id = '0'
   extensionContext: ExtensionContext
   constructor(extensionContext: ExtensionContext, projectPath: string) {
