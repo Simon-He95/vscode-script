@@ -23,6 +23,7 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
   private projectPath: string
   private relativePath = ''
   id = '0'
+  cwd = ''
   extensionContext: ExtensionContext
   constructor(extensionContext: ExtensionContext, projectPath: string) {
     this.extensionContext = extensionContext
@@ -32,13 +33,14 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
   async #init() {
     // 判断当前目录下是否有package.json
     let pkg = `${this.projectPath}/package.json`
+    this.cwd = this.projectPath
     let pnpmworkspace = `${this.projectPath}/pnpm-workspace.yaml`
 
     if (!fs.existsSync(pkg)) {
       // 只获取最多4层深度
       const entries = await fg(
         '**/package.json',
-        { dot: true, ignore: ['**/node_modules/**'], cwd: this.projectPath, deep: 4 },
+        { dot: true, ignore: ['**/node_modules/**', '**/dist/**'], cwd: this.projectPath, deep: 4 },
       )
       if (entries.length === 0) {
         const treeItem = new TodoItem('未找到可执行的命令', vscode.TreeItemCollapsibleState.None) as any
@@ -73,8 +75,7 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
           this.scripts.push(...Object.keys(data).map(name => this.#createRoot(data[name], name, 'workspace', cli)))
         }
       }
-      else
-      if (fs.existsSync(pnpmworkspace)) {
+      else if (fs.existsSync(pnpmworkspace)) {
         // 判断是否是pnpm workspace
         cli = 'pnpm'
         const content = await fs.promises.readFile(pnpmworkspace, 'utf-8')
@@ -92,6 +93,15 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
     }
     catch (error: any) {
       vscode.window.showErrorMessage(error.message)
+    }
+    finally {
+      // 判断是否有makefile文件
+      const entries = await fg(
+        '**/Makefile',
+        { ignore: ['**/node_modules/**', '**/dist/**'], cwd: this.cwd, deep: 4 },
+      )
+      if (entries.length)
+        this.scripts.push(...entries.map(filepath => this.#createMakefile(`${this.cwd}/${filepath.split('/').slice(0, -1).join('/')}`, filepath)))
     }
   }
 
@@ -124,10 +134,31 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
         item.command = {
           command: 'vscode-scripts.run',
           tooltip: label,
+          title: label,
           arguments: [key, cli, type === 'root' ? undefined : name, this.projectPath],
         }
         return item
       }),
+    }
+    return temp
+  }
+
+  #createMakefile(filepath: string, name: string) {
+    const label = `[Makefile]: ${name}`
+    const treeItem = new TodoItem(label, vscode.TreeItemCollapsibleState.None)
+    treeItem.iconPath = {
+      light: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/light/makefile.svg')),
+      dark: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/dark/makefile.svg')),
+    }
+    treeItem.command = {
+      command: 'vscode-scripts.runMakefile',
+      tooltip: label,
+      title: label,
+      arguments: [filepath],
+    }
+    const temp = {
+      id: 'root',
+      treeItem,
     }
     return temp
   }

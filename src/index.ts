@@ -43,6 +43,14 @@ export async function activate(context: vscode.ExtensionContext) {
       // 等待终端初始化完成输出指令
       terminal.processId.then(() => setTimeout(() => terminal.sendText(runCommand), 800))
     }))
+    context.subscriptions.push(vscode.commands.registerCommand('vscode-scripts.runMakefile', async (filepath: string) => {
+      const runCommand = `cd ${filepath} && make`
+      // 新开终端执行
+      const terminal = vscode.window.createTerminal()
+      terminal.show()
+      // 等待终端初始化完成输出指令
+      terminal.processId.then(() => setTimeout(() => terminal.sendText(runCommand), 800))
+    }))
   }
 }
 

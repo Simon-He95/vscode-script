@@ -8,7 +8,7 @@ interface IParams {
 export async function readGlob(packages: string[], cwd: string) {
   const entries = await fg(
     packages.map(v => `${v}/package.json`),
-    { dot: true, ignore: ['**/node_modules/**'], cwd },
+    { dot: true, ignore: ['**/node_modules/**', '**/dist/**'], cwd },
   )
 
   return Promise.all(
