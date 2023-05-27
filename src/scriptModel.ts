@@ -43,7 +43,7 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
         { dot: true, ignore: ['**/node_modules/**', '**/dist/**'], cwd: this.projectPath, deep: 4 },
       )
       if (entries.length === 0) {
-        const treeItem = new TodoItem('未找到可执行的命令', vscode.TreeItemCollapsibleState.None) as any
+        const treeItem = new TodoItem('Not Found', vscode.TreeItemCollapsibleState.None) as any
         treeItem.id = nanoid()
         treeItem.iconPath = {
           light: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/light/404.svg')),
@@ -109,8 +109,8 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
     // workspace默认不展开
     const treeItem = new TodoItem(
       name
-        ? `[${type}]: ${name}`
-        : `[${type}]: ${this.relativePath}`,
+        ? `[${name}]: ${this.relativePath}`
+        : this.relativePath,
       type === 'root'
         ? vscode.TreeItemCollapsibleState.Expanded
         : vscode.TreeItemCollapsibleState.Collapsed)
@@ -128,8 +128,8 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
         item.id = nanoid()
 
         item.iconPath = {
-          light: vscode.Uri.file(this.extensionContext.asAbsolutePath(`assets/light/run${Math.floor(Math.random() * 14) + 1}.svg`)),
-          dark: vscode.Uri.file(this.extensionContext.asAbsolutePath(`assets/light/run${Math.floor(Math.random() * 14) + 1}.svg`)),
+          light: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/light/run.svg')),
+          dark: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/light/run.svg')),
         }
         item.command = {
           command: 'vscode-scripts.run',
@@ -144,11 +144,11 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
   }
 
   #createMakefile(filepath: string, name: string) {
-    const label = `[Makefile]: ${name}`
+    const label = name
     const treeItem = new TodoItem(label, vscode.TreeItemCollapsibleState.None)
     treeItem.iconPath = {
-      light: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/light/makefile.svg')),
-      dark: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/dark/makefile.svg')),
+      light: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/light/file.svg')),
+      dark: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/dark/file.svg')),
     }
     treeItem.command = {
       command: 'vscode-scripts.runMakefile',
