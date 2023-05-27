@@ -44,7 +44,8 @@ export async function activate(context: vscode.ExtensionContext) {
       terminal.processId.then(() => setTimeout(() => terminal.sendText(runCommand), 800))
     }))
     context.subscriptions.push(vscode.commands.registerCommand('vscode-scripts.runMakefile', async (filepath: string) => {
-      const runCommand = `cd ${filepath} && make`
+      // 我电脑没有权限暂时使用sudo make来启动
+      const runCommand = `cd ${filepath} && sudo make`
       // 新开终端执行
       const terminal = vscode.window.createTerminal()
       terminal.show()
