@@ -63,34 +63,19 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
       const pkgJSON = JSON.parse(await fs.promises.readFile(pkg, 'utf8'))
       const { name, scripts, workspace } = pkgJSON
       let cli: 'npm' | 'yarn' | 'pnpm' = 'npm'
+      const _workspace: string[] = []
       if (workspace) {
         // 如果存在workspace，用yarn来处理
         cli = 'yarn'
-        const _workspace = Array.isArray(workspace)
+        await pushWorkspaceScripts.call(this, Array.isArray(workspace)
           ? workspace
-          : workspace.packages ?? []
-        if (_workspace.length) {
-          const data = await readGlob(_workspace, this.projectPath)
-          this.scripts.push(...Object.keys(data).map((name) => {
-            const [relativePath, scripts] = data[name]
-            this.relativePath = relativePath
-            return this.#createRoot(scripts, name, 'workspace', cli)
-          }))
-        }
+          : workspace.packages ?? [])
       }
       else if (fs.existsSync(pnpmworkspace)) {
         // 判断是否是pnpm workspace
         cli = 'pnpm'
         const content = await fs.promises.readFile(pnpmworkspace, 'utf-8')
-        const _workspace = parserYAML(content)
-        if (_workspace.length) {
-          const data = await readGlob(_workspace, this.projectPath)
-          this.scripts.push(...Object.keys(data).map((name) => {
-            const [relativePath, scripts] = data[name]
-            this.relativePath = relativePath
-            return this.#createRoot(scripts, name, 'workspace', cli)
-          }))
-        }
+        await pushWorkspaceScripts.call(this, parserYAML(content))
       }
       if (scripts) {
         // 如果有scripts再做处理
@@ -98,6 +83,17 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
         this.scripts.unshift(this.#createRoot(scripts, name, 'root', cli))
       }
       return this.scripts
+
+      async function pushWorkspaceScripts(this: any, _workspace: string[]) {
+        if (!_workspace.length)
+          return
+        const data = await readGlob(_workspace, this.projectPath)
+        this.scripts.push(...Object.keys(data).map((name) => {
+          const [relativePath, scripts] = data[name]
+          this.relativePath = relativePath
+          return this.#createRoot(scripts, name, 'workspace', cli)
+        }))
+      }
     }
     catch (error: any) {
       vscode.window.showErrorMessage(error.message)
