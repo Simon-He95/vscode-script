@@ -3,7 +3,13 @@
 </p>
 <p align="center"> <a href="./README.md">English</a> | 简体中文</p>
 
-vscode 插件 将当前项目下的脚本命令可视化，点击即可执行，并且支持monorepo哦～
+vscode 插件 将当前项目下的脚本命令可视化，点击即可执行
+
+## 💪 Support
+- yarn
+- npm
+- pnpm
+- Makefile
 
 ![demo](/assets/demo.gif)
 

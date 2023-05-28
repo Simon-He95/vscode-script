@@ -3,8 +3,14 @@
 </p>
 <p align="center"> English | <a href="./README_zh.md">简体中文</a></p>
 
-Automatically detect and collect external links in the packaged file, and promote it to the top of the head of index.html to generate dns-prefetch, so that dns can be parsed earlier
+The vscode plugin visualizes the script commands under the current project and executes them by clicking
 
+## 💪 Support
+- yarn
+- npm
+- pnpm
+- Makefile
+- 
 ![demo](/assets/demo.gif)
 
 ### Dark:
