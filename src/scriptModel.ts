@@ -121,6 +121,7 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
     const temp = {
       id: 'root',
       treeItem,
+      contextValue: 'packageJSON',
       children: Object.keys(scripts).map((key) => {
         const value = scripts[key]
         const label = `${key} 🔛 ${value}`
@@ -131,6 +132,7 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
           light: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/light/run.svg')),
           dark: vscode.Uri.file(this.extensionContext.asAbsolutePath('assets/light/run.svg')),
         }
+        item.contextValue = 'script'
         item.command = {
           command: 'vscode-scripts.run',
           tooltip: label,

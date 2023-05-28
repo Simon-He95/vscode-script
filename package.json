@@ -53,10 +53,27 @@
     },
     "commands": [
       {
-        "command": "vscode-icones.switch",
-        "title": "npm scripts"
+        "command": "vscode-scripts.switch",
+        "title": "npm scripts",
+        "icon": "./icon.png"
+      },
+      {
+        "command": "vscode-scripts.runDebug",
+        "title": "runDebug",
+        "icon": {
+          "light": "assets/light/debug.svg",
+          "dark": "assets/dark/debug.svg"
+        }
       }
-    ]
+    ],
+    "menus": {
+      "view/item/context": [
+        {
+          "command": "vscode-scripts.runDebug",
+          "group": "inline"
+        }
+      ]
+    }
   },
   "scripts": {
     "dev": "pnpm build --watch",
