@@ -70,7 +70,8 @@
       "view/item/context": [
         {
           "command": "vscode-scripts.runDebug",
-          "group": "inline"
+          "group": "inline",
+          "when": "view == vscode-scripts.id && viewItem == script"
         }
       ]
     }
