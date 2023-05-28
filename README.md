@@ -7,6 +7,12 @@ Automatically detect and collect external links in the packaged file, and promot
 
 ![demo](/assets/demo.gif)
 
+### Dark:
+![demo](/assets/dark/demo.png)
+
+### Light:
+![demo](/assets/light/demo.png)
+
 ## :coffee:
 
 [buy me a cup of coffee](https://github.com/Simon-He95/sponsor)
