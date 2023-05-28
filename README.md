@@ -10,7 +10,7 @@ The vscode plugin visualizes the script commands under the current project and e
 - npm
 - pnpm
 - Makefile
-- 
+
 ![demo](/assets/demo.gif)
 
 ### Dark:
