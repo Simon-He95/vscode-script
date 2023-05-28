@@ -128,8 +128,8 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
       contextValue: 'packageJSON',
       children: Object.keys(scripts).map((key) => {
         const value = scripts[key]
-        const label = `${key} 🔛 ${value}`
-        const item = new TodoItem({ label, highlights: [[0, 0]] }, vscode.TreeItemCollapsibleState.None) as any
+        const label = `${key} ✨ ${value}`
+        const item = new TodoItem({ label, highlights: [[0, key.length]] }, vscode.TreeItemCollapsibleState.None) as any
         item.id = nanoid()
 
         item.iconPath = {
