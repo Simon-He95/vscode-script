@@ -4,6 +4,7 @@ import fg from 'fast-glob'
 interface IParams {
   name: string
   scripts: Record<string, string>
+  relativepath: string
 }
 export async function readGlob(packages: string[], cwd: string) {
   const entries = await fg(
@@ -18,7 +19,7 @@ export async function readGlob(packages: string[], cwd: string) {
         if (!pkg)
           return
         const { name, scripts } = pkg
-        return { name, scripts }
+        return { name, scripts, relativepath: v }
       }
       catch (error) {
         return {}
@@ -26,13 +27,12 @@ export async function readGlob(packages: string[], cwd: string) {
     }) as Promise<IParams>[],
   ).then(v =>
     v.reduce((result, v) => {
-      const { name, scripts } = v
+      const { name, scripts, relativepath } = v
       // 过滤没有scripts或name的子包
-      if (!name || !scripts)
-        return result
-      result[name] = scripts
+      if (name && scripts)
+        result[name] = [relativepath, scripts]
       return result
-    }, {} as Record<string, Record<string, string>>),
+    }, {} as Record<string, [string, Record<string, string>]>),
   )
 }
 

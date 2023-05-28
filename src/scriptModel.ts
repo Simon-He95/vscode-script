@@ -61,7 +61,6 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
     // 首先加入pkg
     try {
       const pkgJSON = JSON.parse(await fs.promises.readFile(pkg, 'utf8'))
-      this.relativePath = `${this.projectPath.split('/').slice(-1)[0]}/package.json`
       const { name, scripts, workspace } = pkgJSON
       let cli: 'npm' | 'yarn' | 'pnpm' = 'npm'
       if (workspace) {
@@ -72,7 +71,11 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
           : workspace.packages ?? []
         if (_workspace.length) {
           const data = await readGlob(_workspace, this.projectPath)
-          this.scripts.push(...Object.keys(data).map(name => this.#createRoot(data[name], name, 'workspace', cli)))
+          this.scripts.push(...Object.keys(data).map((name) => {
+            const [relativePath, scripts] = data[name]
+            this.relativePath = relativePath
+            return this.#createRoot(scripts, name, 'workspace', cli)
+          }))
         }
       }
       else if (fs.existsSync(pnpmworkspace)) {
@@ -82,11 +85,16 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
         const _workspace = parserYAML(content)
         if (_workspace.length) {
           const data = await readGlob(_workspace, this.projectPath)
-          this.scripts.push(...Object.keys(data).map(name => this.#createRoot(data[name], name, 'workspace', cli)))
+          this.scripts.push(...Object.keys(data).map((name) => {
+            const [relativePath, scripts] = data[name]
+            this.relativePath = relativePath
+            return this.#createRoot(scripts, name, 'workspace', cli)
+          }))
         }
       }
       if (scripts) {
         // 如果有scripts再做处理
+        this.relativePath = `${this.projectPath.split('/').slice(-1)[0]}/package.json`
         this.scripts.unshift(this.#createRoot(scripts, name, 'root', cli))
       }
       return this.scripts
