@@ -9,8 +9,17 @@ The vscode plugin visualizes the script commands under the current project and e
 - yarn
 - npm
 - pnpm
-- Makefile
+- Makefile 
+  - if you don't have permission to run, add the below config into your vscode settings.json
 
+## Auth
+```
+{
+  "vscode-script":{
+    "auth": "sudo"
+  }
+}
+```
 ![demo](/assets/demo.gif)
 
 ### Dark:

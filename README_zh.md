@@ -10,7 +10,16 @@ vscode 插件 将当前项目下的脚本命令可视化，点击即可执行
 - npm
 - pnpm
 - Makefile
+  - 如果你没有权限去执行命令，试着将下面的配置加入你的vscode settings.json中
 
+## Auth
+```
+{
+  "vscode-script":{
+    "auth": "sudo"
+  }
+}
+```
 ![demo](/assets/demo.gif)
 
 ### Dark:
