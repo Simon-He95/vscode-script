@@ -63,7 +63,6 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
       const pkgJSON = JSON.parse(await fs.promises.readFile(pkg, 'utf8'))
       const { name, scripts, workspace } = pkgJSON
       let cli: 'npm' | 'yarn' | 'pnpm' = 'npm'
-      const _workspace: string[] = []
       if (workspace) {
         // 如果存在workspace，用yarn来处理
         cli = 'yarn'
@@ -122,10 +121,13 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
       light: vscode.Uri.file(this.extensionContext.asAbsolutePath(`assets/light/${type === 'root' ? 'npm' : 'pnpm'}.svg`)),
       dark: vscode.Uri.file(this.extensionContext.asAbsolutePath(`assets/dark/${type === 'root' ? 'npm' : 'pnpm'}.svg`)),
     }
+    treeItem.contextValue = 'packageJSON'
+
     const temp = {
       id: 'root',
       treeItem,
       contextValue: 'packageJSON',
+      view: `${this.projectPath}/${type === 'root' ? 'package.json' : this.relativePath}`,
       children: Object.keys(scripts).map((key) => {
         const value = scripts[key]
         const label = `${key} ✨ ${value}`
@@ -162,8 +164,10 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
       title: label,
       arguments: [filepath],
     }
+    treeItem.contextValue = 'makefile'
     const temp = {
       id: 'root',
+      view: `${this.cwd}/${name}`,
       treeItem,
     }
     return temp

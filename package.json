@@ -64,6 +64,14 @@
           "light": "assets/light/debug.svg",
           "dark": "assets/dark/debug.svg"
         }
+      },
+      {
+        "command": "vscode-scripts.view",
+        "title": "view",
+        "icon": {
+          "light": "assets/light/view.svg",
+          "dark": "assets/dark/view.svg"
+        }
       }
     ],
     "menus": {
@@ -72,6 +80,11 @@
           "command": "vscode-scripts.runDebug",
           "group": "inline",
           "when": "view == vscode-scripts.id && viewItem == script"
+        },
+        {
+          "command": "vscode-scripts.view",
+          "group": "inline",
+          "when": "view == vscode-scripts.id && (viewItem == packageJSON || viewItem == makefile)"
         }
       ]
     }
