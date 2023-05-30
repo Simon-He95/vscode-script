@@ -28,11 +28,11 @@ export async function activate(context: vscode.ExtensionContext) {
       return
     runTerminal(command.arguments, 'JavaScript Debug Terminal')
   }))
-  context.subscriptions.push(vscode.commands.registerCommand('vscode-scripts.view', async ({ view }: any) => {
+  context.subscriptions.push(vscode.commands.registerCommand('vscode-scripts.view', ({ view }: any) => {
     if (!view)
       return
-    const doc = await vscode.workspace.openTextDocument(view)
-    await vscode.window.showTextDocument(doc)
+    vscode.workspace.openTextDocument(view).then(
+      doc => vscode.window.showTextDocument(doc))
   }))
   function runTerminal(args: any, terminalName = '') {
     const [script, env, workspaceName, _projectPath] = args
