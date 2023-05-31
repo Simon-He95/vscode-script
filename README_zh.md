@@ -5,6 +5,9 @@
 
 vscode 插件 将当前项目下的脚本命令可视化，点击即可执行
 
+## Warning
+Makefile 需要安装 [gum](https://github.com/charmbracelet/gum), 如果你需要使用, 请先安装gum
+
 ## 💪 Support
 - yarn
 - npm

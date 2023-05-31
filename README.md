@@ -5,6 +5,9 @@
 
 The vscode plugin visualizes the script commands under the current project and executes them by clicking
 
+## Warning
+Makefile needs [gum](https://github.com/charmbracelet/gum), if you need, please install gum first.
+
 ## 💪 Support
 - yarn
 - npm
