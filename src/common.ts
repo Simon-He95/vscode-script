@@ -45,3 +45,20 @@ export function parserYAML(str: string) {
   }
   return result
 }
+
+export function readMakefile(filepath: string): Promise<string[]> {
+  return new Promise((resolve) => {
+    fsp.readFile(filepath, 'utf-8')
+      .then((res) => {
+        const commandNames: string[] = []
+        for (const match of res.matchAll(/.PHONY:\s*([\w0-9]+)/g)) {
+          let name
+          // eslint-disable-next-line no-cond-assign
+          if (!match || !(name = match[1]))
+            continue
+          commandNames.push(name)
+        }
+        resolve(commandNames)
+      }).catch(() => resolve([]))
+  })
+}

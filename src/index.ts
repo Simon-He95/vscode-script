@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { ScriptProvider } from './scriptModel'
+import { readMakefile } from './common'
 
 export async function activate(context: vscode.ExtensionContext) {
   const workspaceFolders = vscode.workspace.workspaceFolders
@@ -14,8 +15,13 @@ export async function activate(context: vscode.ExtensionContext) {
     runTerminal(args)
   }))
   context.subscriptions.push(vscode.commands.registerCommand('vscode-scripts.runMakefile', async (filepath: string) => {
+    // 读取Makefile文件内容提取所有的命令, 用gum来选择
+    const makefilePath = `${filepath}/Makefile`
+    const commands = await readMakefile(makefilePath)
+    if (!commands.length)
+      return vscode.window.showInformationMessage(`未能在${makefilePath}中找到可以执行的命令`)
     // 我电脑没有权限暂时使用sudo make来启动
-    const runCommand = `cd ${filepath} && ${auth} make`.replace(/\s+/g, ' ')
+    const runCommand = `cd ${filepath} && choose=$(echo "${commands.join('\\n')}" | gum filter --placeholder=" 请选择一个命令") && ${auth} make $choose || echo "已取消"`.replace(/\s+/g, ' ')
     // 新开终端执行
     const terminal = vscode.window.createTerminal()
     terminal.show()
