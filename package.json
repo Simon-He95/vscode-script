@@ -69,8 +69,8 @@
         "command": "vscode-scripts.view",
         "title": "view",
         "icon": {
-          "light": "assets/light/view.svg",
-          "dark": "assets/dark/view.svg"
+          "light": "assets/light/search.svg",
+          "dark": "assets/dark/search.svg"
         }
       }
     ],
