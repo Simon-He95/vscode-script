@@ -14,7 +14,7 @@ export class TodoItem extends vscode.TreeItem {
   }
 }
 
-// todo: 修改一下图标样式
+// todo: 监听所有的package.json文件是否修改来重新刷新
 export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<TodoItem | undefined | void> = new vscode.EventEmitter<TodoItem | undefined | void>()
   readonly onDidChangeTreeData: vscode.Event<TodoItem | undefined | void> = this._onDidChangeTreeData.event
@@ -31,6 +31,8 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
   }
 
   async #init() {
+    // 每次reset前清空
+    this.scripts.length = 0
     // 判断当前目录下是否有package.json
     let pkg = `${this.projectPath}/package.json`
     this.cwd = this.projectPath
@@ -107,7 +109,6 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
         this.scripts.push(...entries.map(filepath => this.#createMakefile(`${this.cwd}/${filepath.split('/').slice(0, -1).join('/')}`, filepath)))
       // 查看scripts中脚本数量,如果脚本数量不超过30,则默认都展开
       let max = 30
-
       for (const script of this.scripts) {
         const children = script.children
         if (max <= 0)

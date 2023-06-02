@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { watch } from 'chokidar'
 import { ScriptProvider } from './scriptModel'
 import { readMakefile } from './common'
 
@@ -76,6 +77,18 @@ export async function activate(context: vscode.ExtensionContext) {
     // 等待终端初始化完成输出指令
     terminal.processId.then(() => setTimeout(() => terminal.sendText(runCommand), 800))
   }
+  // 监听文件变化 package.json 和 Makefile
+  const watcher = watch(['**/package.json', '**/Makefile'], {
+    cwd: projectPath,
+    depth: 20,
+    awaitWriteFinish: {
+      stabilityThreshold: 2000,
+      pollInterval: 100,
+    },
+  })
+  watcher.on('change', () => {
+    todoDataProvider.refresh()
+  })
 }
 
 export function deactivate() {
