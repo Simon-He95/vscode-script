@@ -105,6 +105,21 @@ export class ScriptProvider implements vscode.TreeDataProvider<TodoItem> {
       )
       if (entries.length)
         this.scripts.push(...entries.map(filepath => this.#createMakefile(`${this.cwd}/${filepath.split('/').slice(0, -1).join('/')}`, filepath)))
+      // 查看scripts中脚本数量,如果脚本数量不超过30,则默认都展开
+      let max = 30
+
+      for (const script of this.scripts) {
+        const children = script.children
+        if (max <= 0)
+          break
+        if (children)
+          max -= children.length
+      }
+      if (max > 0) {
+        this.scripts.forEach((script) => {
+          script.treeItem.collapsibleState = vscode.TreeItemCollapsibleState.Expanded
+        })
+      }
     }
   }
 
