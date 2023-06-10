@@ -58,14 +58,6 @@
         "icon": "./icon.png"
       },
       {
-        "command": "vscode-scripts.runDebug",
-        "title": "runDebug",
-        "icon": {
-          "light": "assets/light/debug.svg",
-          "dark": "assets/dark/debug.svg"
-        }
-      },
-      {
         "command": "vscode-scripts.view",
         "title": "view",
         "icon": {
@@ -87,8 +79,7 @@
           "when": "view == vscode-scripts.id && (viewItem == packageJSON || viewItem == makefile)"
         }
       ]
-    },
-    "terminal.integrated.debugable": true
+    }
   },
   "scripts": {
     "dev": "pnpm build --watch",
