@@ -3,6 +3,7 @@ import { watch } from 'chokidar'
 import { ScriptProvider } from './scriptModel'
 import { readMakefile } from './common'
 
+// todo:修改成webview 保留当前终端是否启动的状态
 export async function activate(context: vscode.ExtensionContext) {
   const workspaceFolders = vscode.workspace.workspaceFolders
   if (!workspaceFolders)
@@ -87,7 +88,10 @@ export async function activate(context: vscode.ExtensionContext) {
 
     if (hasCreatedTerminal) {
       // 如果创建了就激活当前终端再次执行命令，而不重新打开新的
-      hasCreatedTerminal.terminal.sendText(runCommand)
+      const targetTerminal = hasCreatedTerminal.terminal
+      targetTerminal.sendText(runCommand)
+      // 聚焦到此终端
+      targetTerminal.show()
       return
     }
 
