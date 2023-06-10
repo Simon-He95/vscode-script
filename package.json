@@ -87,7 +87,8 @@
           "when": "view == vscode-scripts.id && (viewItem == packageJSON || viewItem == makefile)"
         }
       ]
-    }
+    },
+    "terminal.integrated.debugable": true
   },
   "scripts": {
     "dev": "pnpm build --watch",

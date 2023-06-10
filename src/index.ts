@@ -41,7 +41,8 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.workspace.openTextDocument(view).then(
       doc => vscode.window.showTextDocument(doc))
   }))
-  function runTerminal(args: any, terminalName = '') {
+  const CREATED_TERMINAL: any[] = []
+  async function runTerminal(args: any) {
     const [script, env, workspaceName, _projectPath] = args
     let runCommand = ''
     if (projectPath !== _projectPath)
@@ -71,12 +72,43 @@ export async function activate(context: vscode.ExtensionContext) {
           break
       }
     }
+
+    // 是否已经创建过次终端
+    const hasCreatedTerminal = CREATED_TERMINAL.find((_terminal) => {
+      const { projectPath, script: _script } = _terminal
+      return projectPath === _projectPath && _script === script
+    })
+
+    if (hasCreatedTerminal) {
+      // 如果创建了就激活当前终端再次执行命令，而不重新打开新的
+      hasCreatedTerminal.terminal.sendText(runCommand)
+      return
+    }
+
     // 新开终端执行
-    const terminal = vscode.window.createTerminal(terminalName)
+    const terminal = vscode.window.createTerminal(script)
     terminal.show()
+    const id = await terminal.processId!
+
+    CREATED_TERMINAL.push({
+      id,
+      projectPath: _projectPath,
+      script,
+      terminal,
+    })
+
     // 等待终端初始化完成输出指令
     terminal.processId.then(() => setTimeout(() => terminal.sendText(runCommand), 800))
   }
+  context.subscriptions.push(vscode.window.onDidCloseTerminal(async (terminal) => {
+    const id = await terminal.processId
+    if (!id)
+      return
+    const idx = CREATED_TERMINAL.findIndex(_terminal => _terminal.id === id)
+    if (idx !== -1)
+      CREATED_TERMINAL.splice(idx, 1)
+  }))
+
   // 监听文件变化 package.json 和 Makefile
   const watcher = watch(['**/package.json', '**/Makefile'], {
     cwd: projectPath,
