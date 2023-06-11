@@ -69,7 +69,9 @@ export async function activate(context: vscode.ExtensionContext) {
       else if (type === 'view') {
         const absolutePath = _value.absolutePath
           ? `${_value.absolutePath}/Makefile`
-          : `${projectPath}/${_value.relativePath}`
+          : _value.relativePath[0] === '/'
+            ? _value.relativePath
+            : `${projectPath}/${_value.relativePath}`
         openFile(absolutePath)
       }
     },
