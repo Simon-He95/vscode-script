@@ -23,13 +23,11 @@ Makefile 需要安装 [gum](https://github.com/charmbracelet/gum), 如果你需�
   }
 }
 ```
-![demo](/assets/demo.gif)
-
 ### Dark:
-![demo](/assets/dark/demo.png)
+![demo](/assets/dark.gif)
 
 ### Light:
-![demo](/assets/light/demo.png)
+![demo](/assets/light.gif)
 
 ## :coffee:
 
