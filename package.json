@@ -46,37 +46,9 @@
     "views": {
       "scripts": [
         {
+          "type": "webview",
           "id": "vscode-scripts.id",
           "name": "npm scripts"
-        }
-      ]
-    },
-    "commands": [
-      {
-        "command": "vscode-scripts.switch",
-        "title": "npm scripts",
-        "icon": "./icon.png"
-      },
-      {
-        "command": "vscode-scripts.view",
-        "title": "view",
-        "icon": {
-          "light": "assets/light/search.svg",
-          "dark": "assets/dark/search.svg"
-        }
-      }
-    ],
-    "menus": {
-      "view/item/context": [
-        {
-          "command": "vscode-scripts.runDebug",
-          "group": "inline",
-          "when": "view == vscode-scripts.id && viewItem == script"
-        },
-        {
-          "command": "vscode-scripts.view",
-          "group": "inline",
-          "when": "view == vscode-scripts.id && (viewItem == packageJSON || viewItem == makefile)"
         }
       ]
     }
@@ -89,6 +61,7 @@
     "lint": "eslint . --ext .vue,.js,.ts,.jsx,.tsx,.md,.json --max-warnings 0 --cache",
     "lint:fix": "eslint . --ext .vue,.js,.ts,.jsx,.tsx,.md,.json --max-warnings 0 --cache --fix",
     "publish": "vsce publish --no-dependencies",
+    "watch": "npx tailwindcss -i ./tailwind.css -o ./media/tailwind.css --watch",
     "typecheck": "tsc --noEmit",
     "release": "bumpp && pnpm run publish"
   },
@@ -96,6 +69,8 @@
     "@antfu/eslint-config": "^0.38.4",
     "@types/node": "^18.15.11",
     "@types/vscode": "^1.77.0",
+    "@vscode-use/registerwebview": "^0.0.2",
+    "@vscode-use/utils": "^0.0.5",
     "bumpp": "^9.1.0",
     "chokidar": "^3.5.3",
     "eslint": "^8.37.0",
