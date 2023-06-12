@@ -45,7 +45,7 @@ export async function getScripts(projectPath: string) {
       result.unshift({
         scripts,
         label: name || 'No Name',
-        relativePath,
+        relativePath: relativePath[0] === '/' ? 'package.json' : relativePath,
         projectPath,
         type: 'root',
         cli,

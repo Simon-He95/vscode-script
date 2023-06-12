@@ -19,7 +19,8 @@ Makefile needs [gum](https://github.com/charmbracelet/gum), if you need, please 
 ```
 {
   "vscode-script":{
-    "auth": "sudo"
+    "auth": "sudo",
+    "fontSize": "12px"
   }
 }
 ```

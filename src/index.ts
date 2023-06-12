@@ -11,7 +11,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const workspaceFolders = vscode.workspace.workspaceFolders
   if (!workspaceFolders)
     return
-  const { auth = '' } = vscode.workspace.getConfiguration('vscode-script')
+  const { auth = '', fontSize = '12px' } = vscode.workspace.getConfiguration('vscode-script')
   const projectPath = workspaceFolders[0].uri.fsPath
   const scripts = await getScripts(projectPath)
   let treeData = transformScriptToTreeData(scripts)
@@ -20,6 +20,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const provider = webviewProvider(
     context, {
       treeData,
+      fontSize: fontSize.endsWidth('px') ? fontSize : `${fontSize}px`,
     },
     async (data) => {
       const { type, value } = data
@@ -161,7 +162,8 @@ export async function activate(context: vscode.ExtensionContext) {
     const scripts = await getScripts(projectPath)
     treeData = transformScriptToTreeData(scripts)
     provider.deferScript(getwebviewScript({
-      treeData,
+      treeData: fontSize.endsWidth('px') ? fontSize : `${fontSize}px`,
+      fontSize,
     }))
     provider.refresh(getwebviewHtml())
   })

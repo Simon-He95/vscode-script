@@ -1,5 +1,5 @@
 export function getwebviewScript(props: Record<string, any>) {
-  const { treeData } = props
+  const { treeData, fontSize } = props
 
   return `
   <script>
@@ -8,6 +8,7 @@ export function getwebviewScript(props: Record<string, any>) {
   const App = {
     data() {
       return {
+        fontSize: "${fontSize}",
         closeLoading: false,
         maxWidth:'auto',
         dataSource: ${JSON.stringify(treeData)},
