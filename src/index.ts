@@ -20,7 +20,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const provider = webviewProvider(
     context, {
       treeData,
-      fontSize: fontSize.endsWidth('px') ? fontSize : `${fontSize}px`,
+      fontSize: fontSize.endsWith('px') ? fontSize : `${fontSize}px`,
     },
     async (data) => {
       const { type, value } = data
@@ -162,7 +162,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const scripts = await getScripts(projectPath)
     treeData = transformScriptToTreeData(scripts)
     provider.deferScript(getwebviewScript({
-      treeData: fontSize.endsWidth('px') ? fontSize : `${fontSize}px`,
+      treeData: fontSize.endsWith('px') ? fontSize : `${fontSize}px`,
       fontSize,
     }))
     provider.refresh(getwebviewHtml())
