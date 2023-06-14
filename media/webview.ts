@@ -1,6 +1,13 @@
 export function getwebviewScript(props: Record<string, any>) {
-  const { treeData, fontSize = '12px', labelColor = 'rgb(209,121,21)', filePathColor = 'rgb(167,134,42)', commandLabelColor = 'rgb(78,119,244)', commandDetailColor = 'rgb(253,183,104)', iconColor = 'rgb(149, 48, 232)' } = props
-
+  const {
+    treeData,
+    fontSize,
+    labelColor,
+    filePathColor,
+    commandLabelColor,
+    commandDetailColor,
+    iconColor,
+  } = props
   return `
   <script>
   const vscode = acquireVsCodeApi()
@@ -8,15 +15,15 @@ export function getwebviewScript(props: Record<string, any>) {
   const App = {
     data() {
       return {
-        iconColor: "${iconColor}",
-        commandDetailColor: "${commandDetailColor}",
-        commandLabelColor: "${commandLabelColor}",
-        filePathColor: "${filePathColor}",
-        labelColor: "${labelColor}",
-        fontSize: "${fontSize}",
+        iconColor: "${iconColor || 'rgb(149, 48, 232)'}",
+        commandDetailColor: "${commandDetailColor || 'rgb(253,183,104)'}",
+        commandLabelColor: "${commandLabelColor || 'rgb(78,119,244)'}",
+        filePathColor: "${filePathColor || 'rgb(167,134,42)'}",
+        labelColor: "${labelColor || 'rgb(209,121,21)'}",
+        fontSize: "${fontSize || '12px'}",
         closeLoading: false,
         maxWidth:'auto',
-        dataSource: ${JSON.stringify(treeData)},
+        dataSource: ${JSON.stringify(treeData || [])},
       }
     },
     mounted(){

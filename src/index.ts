@@ -20,7 +20,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const provider = webviewProvider(
     context, {
       treeData,
-      fontSize: fontSize.endsWith('px') ? fontSize : `${fontSize}px`,
+      fontSize: fontSize ? fontSize.endsWith('px') ? fontSize : `${fontSize}px` : undefined,
     },
     async (data) => {
       const { type, value } = data
@@ -178,7 +178,7 @@ export async function activate(context: vscode.ExtensionContext) {
     treeData = transformScriptToTreeData(scripts)
     provider.deferScript(getwebviewScript({
       treeData,
-      fontSize: fontSize.endsWith('px') ? fontSize : `${fontSize}px`,
+      fontSize: fontSize ? fontSize.endsWith('px') ? fontSize : `${fontSize}px` : undefined,
       labelColor,
       filePathColor,
       commandLabelColor,
