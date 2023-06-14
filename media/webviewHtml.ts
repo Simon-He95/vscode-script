@@ -18,18 +18,18 @@ export function getwebviewHtml() {
               <span class="flex items-center">
                 <template v-if="data.children">
                   <span class="flex items-center">
-                    <span class="text-[rgb(209,121,21)] mr-2">[{{ data.label }}]</span>
-                    <span :style="{maxWidth: maxWidth - 40 + 'px'}" class="text-[rgb(167,134,42)] overflow-hidden text-ellipsis" v-if="data.relativePath">{{data.relativePath}}</span>
+                    <span :style="{color: labelColor}" class="mr-2">[{{ data.label }}]</span>
+                    <span :style="{maxWidth: maxWidth - 40 + 'px', color: filePathColor}" class="overflow-hidden text-ellipsis" v-if="data.relativePath">{{data.relativePath}}</span>
                   </span>
                 </template>
                 <template v-else>
-                  <span class="text-[rgb(78,119,244)] mr-2 inline-flex items-center gap-1">
+                  <span :style="{color: commandLabelColor}" class="mr-2 inline-flex items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" :width="fontSize" :height="fontSize" viewBox="0 0 24 24">
-                      <path fill="rgb(149, 48, 232)" d="M17.5 3C15.57 3 14 4.57 14 6.5V8h-4V6.5C10 4.57 8.43 3 6.5 3S3 4.57 3 6.5S4.57 10 6.5 10H8v4H6.5C4.57 14 3 15.57 3 17.5S4.57 21 6.5 21s3.5-1.57 3.5-3.5V16h4v1.5c0 1.93 1.57 3.5 3.5 3.5s3.5-1.57 3.5-3.5s-1.57-3.5-3.5-3.5H16v-4h1.5c1.93 0 3.5-1.57 3.5-3.5S19.43 3 17.5 3zM16 8V6.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5S18.33 8 17.5 8H16zM6.5 8C5.67 8 5 7.33 5 6.5S5.67 5 6.5 5S8 5.67 8 6.5V8H6.5zm3.5 6v-4h4v4h-4zm7.5 5c-.83 0-1.5-.67-1.5-1.5V16h1.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5zm-11 0c-.83 0-1.5-.67-1.5-1.5S5.67 16 6.5 16H8v1.5c0 .83-.67 1.5-1.5 1.5z"/>
+                      <path :fill="iconColor" d="M17.5 3C15.57 3 14 4.57 14 6.5V8h-4V6.5C10 4.57 8.43 3 6.5 3S3 4.57 3 6.5S4.57 10 6.5 10H8v4H6.5C4.57 14 3 15.57 3 17.5S4.57 21 6.5 21s3.5-1.57 3.5-3.5V16h4v1.5c0 1.93 1.57 3.5 3.5 3.5s3.5-1.57 3.5-3.5s-1.57-3.5-3.5-3.5H16v-4h1.5c1.93 0 3.5-1.57 3.5-3.5S19.43 3 17.5 3zM16 8V6.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5S18.33 8 17.5 8H16zM6.5 8C5.67 8 5 7.33 5 6.5S5.67 5 6.5 5S8 5.67 8 6.5V8H6.5zm3.5 6v-4h4v4h-4zm7.5 5c-.83 0-1.5-.67-1.5-1.5V16h1.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5zm-11 0c-.83 0-1.5-.67-1.5-1.5S5.67 16 6.5 16H8v1.5c0 .83-.67 1.5-1.5 1.5z"/>
                     </svg>
                     <span>{{ data.label }}{{data.detail?':':''}}</span>
                   </span>
-                  <span class="text-[rgb(253,183,104)] overflow-hidden text-ellipsis inline-block w-full" :style="{maxWidth:maxWidth+'px'}">{{ data.detail }}</span>
+                  <span :style="{color:commandDetailColor}" class="overflow-hidden text-ellipsis inline-block w-full" :style="{maxWidth:maxWidth+'px'}">{{ data.detail }}</span>
                 </template>
               </span>
             </span>

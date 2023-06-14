@@ -11,7 +11,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const workspaceFolders = vscode.workspace.workspaceFolders
   if (!workspaceFolders)
     return
-  let { auth = '', fontSize = '12px' } = vscode.workspace.getConfiguration('vscode-script')
+  let { auth = '', fontSize, labelColor, filePathColor, commandLabelColor, commandDetailColor, iconColor } = vscode.workspace.getConfiguration('vscode-script')
   const projectPath = workspaceFolders[0].uri.fsPath
   const scripts = await getScripts(projectPath)
   let treeData = transformScriptToTreeData(scripts)
@@ -161,10 +161,15 @@ export async function activate(context: vscode.ExtensionContext) {
   watcher.on('change', update)
 
   // 监听configuration的变化
-  context.subscriptions.push(addEventListener('config-change', (e) => {
-    const { fontSize: _fontSize, auth: _auth } = vscode.workspace.getConfiguration('vscode-script')
+  context.subscriptions.push(addEventListener('config-change', () => {
+    const { fontSize: _fontSize, auth: _auth, labelColor: _labelColor, filePathColor: _filePathColor, commandLabelColor: _commandLabelColor, commandDetailColor: _commandDetailColor, iconColor: _iconColor } = vscode.workspace.getConfiguration('vscode-script')
     fontSize = _fontSize
     auth = _auth
+    labelColor = _labelColor
+    filePathColor = _filePathColor
+    commandLabelColor = _commandLabelColor
+    commandDetailColor = _commandDetailColor
+    iconColor = _iconColor
     update()
   }))
 
@@ -174,6 +179,11 @@ export async function activate(context: vscode.ExtensionContext) {
     provider.deferScript(getwebviewScript({
       treeData,
       fontSize: fontSize.endsWith('px') ? fontSize : `${fontSize}px`,
+      labelColor,
+      filePathColor,
+      commandLabelColor,
+      commandDetailColor,
+      iconColor,
     }))
     provider.refresh(getwebviewHtml())
   }

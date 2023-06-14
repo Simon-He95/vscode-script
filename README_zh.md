@@ -19,11 +19,20 @@ Makefile 需要安装 [gum](https://github.com/charmbracelet/gum), 如果你需�
 ```
 {
   "vscode-script":{
-    "auth": "sudo",
-    "fontSize": "12px"
+    "auth": "sudo"
   }
 }
 ```
+
+### 自定义搭配颜色
+- fontSize 字体大小
+- iconColor 按钮颜色
+- commandDetailColor 指令右侧详情字体颜色
+- commandLabelColor 指令字体颜色
+- filePathColor 路径字体颜色
+- labelColor pkgName字体颜色
+
+
 ### Dark:
 ![demo](/assets/dark.gif)
 

@@ -1,5 +1,5 @@
 export function getwebviewScript(props: Record<string, any>) {
-  const { treeData, fontSize } = props
+  const { treeData, fontSize = '12px', labelColor = 'rgb(209,121,21)', filePathColor = 'rgb(167,134,42)', commandLabelColor = 'rgb(78,119,244)', commandDetailColor = 'rgb(253,183,104)', iconColor = 'rgb(149, 48, 232)' } = props
 
   return `
   <script>
@@ -8,6 +8,11 @@ export function getwebviewScript(props: Record<string, any>) {
   const App = {
     data() {
       return {
+        iconColor: "${iconColor}",
+        commandDetailColor: "${commandDetailColor}",
+        commandLabelColor: "${commandLabelColor}",
+        filePathColor: "${filePathColor}",
+        labelColor: "${labelColor}",
         fontSize: "${fontSize}",
         closeLoading: false,
         maxWidth:'auto',
