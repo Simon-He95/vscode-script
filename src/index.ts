@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { watch } from 'chokidar'
-import { message, openFile } from '@vscode-use/utils'
+import { addEventListener, message, openFile } from '@vscode-use/utils'
 import { getwebviewScript } from '../media/webview'
 import { getwebviewHtml } from '../media/webviewHtml'
 import { readMakefile } from './common'
@@ -11,7 +11,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const workspaceFolders = vscode.workspace.workspaceFolders
   if (!workspaceFolders)
     return
-  const { auth = '', fontSize = '12px' } = vscode.workspace.getConfiguration('vscode-script')
+  let { auth = '', fontSize = '12px' } = vscode.workspace.getConfiguration('vscode-script')
   const projectPath = workspaceFolders[0].uri.fsPath
   const scripts = await getScripts(projectPath)
   let treeData = transformScriptToTreeData(scripts)
@@ -158,15 +158,25 @@ export async function activate(context: vscode.ExtensionContext) {
     },
   })
 
-  watcher.on('change', async () => {
+  watcher.on('change', update)
+
+  // 监听configuration的变化
+  context.subscriptions.push(addEventListener('config-change', (e) => {
+    const { fontSize: _fontSize, auth: _auth } = vscode.workspace.getConfiguration('vscode-script')
+    fontSize = _fontSize
+    auth = _auth
+    update()
+  }))
+
+  async function update() {
     const scripts = await getScripts(projectPath)
     treeData = transformScriptToTreeData(scripts)
     provider.deferScript(getwebviewScript({
-      treeData: fontSize.endsWith('px') ? fontSize : `${fontSize}px`,
-      fontSize,
+      treeData,
+      fontSize: fontSize.endsWith('px') ? fontSize : `${fontSize}px`,
     }))
     provider.refresh(getwebviewHtml())
-  })
+  }
 }
 
 export function deactivate() {

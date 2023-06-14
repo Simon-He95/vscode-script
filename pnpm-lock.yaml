@@ -14,8 +14,8 @@ devDependencies:
     specifier: ^0.0.2
     version: 0.0.2
   '@vscode-use/utils':
-    specifier: ^0.0.5
-    version: 0.0.5
+    specifier: ^0.0.12
+    version: 0.0.12
   bumpp:
     specifier: ^9.1.0
     version: 9.1.0
@@ -695,8 +695,8 @@ packages:
     engines: {vscode: ^1.77.0}
     dev: true
 
-  /@vscode-use/utils@0.0.5:
-    resolution: {integrity: sha512-ewxk3mY+TI5gW4o5bU11j//5okvepvOhkwuP23Jgrywtj81omomWw1tDjCd2okY4vqvdFbFkUYuVyhGeAng5xg==}
+  /@vscode-use/utils@0.0.12:
+    resolution: {integrity: sha512-JL4pc15gU5LY5IIY8gV1KHLlfwmg++PXAeQ0qa0VjUmj71MRCdZ60k06nlb7sElhCkQpQgCdIAVKg7GTNCimGw==}
     engines: {vscode: ^1.77.0}
     dev: true
 
