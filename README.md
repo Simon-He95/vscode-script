@@ -32,6 +32,8 @@ Makefile needs [gum](https://github.com/charmbracelet/gum), if you need, please 
 - filePathColor
 - labelColor
 
+![CustomColors](/assets/demo1.gif)
+
 ### Dark:
 ![demo](/assets/dark.gif)
 

@@ -32,6 +32,7 @@ Makefile 需要安装 [gum](https://github.com/charmbracelet/gum), 如果你需�
 - filePathColor 路径字体颜色
 - labelColor pkgName字体颜色
 
+![CustomColors](/assets/demo1.gif)
 
 ### Dark:
 ![demo](/assets/dark.gif)
