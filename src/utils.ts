@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import fg from 'fast-glob'
 import { message } from '@vscode-use/utils'
-import { parserYAML, readGlob } from './common'
+import { parserYAML, readGlob, readMakefile } from './common'
 
 export async function getScripts(projectPath: string) {
   const result = []
@@ -78,11 +78,19 @@ export async function getScripts(projectPath: string) {
       { ignore: ['**/node_modules/**', '**/dist/**'], cwd, deep: 4 },
     )
     if (entries.length) {
-      result.push(...entries.map(filepath => ({
-        type: 'makefile',
-        absolutePath: `${cwd}/${filepath.split('/').slice(0, -1).join('/')}`,
-        filepath,
-      })))
+      const makefiles = await Promise.all(entries.map(async (filepath) => {
+        const absolutePath = `${cwd}/${filepath.split('/').slice(0, -1).join('/')}`
+        const children = await readMakefile(`${absolutePath}/Makefile`)
+        if (children.length) {
+          return {
+            children,
+            type: 'makefile',
+            filepath,
+            absolutePath,
+          }
+        }
+      }))
+      result.push(...makefiles.filter(Boolean))
     }
   }
 }
@@ -93,6 +101,7 @@ export function transformScriptToTreeData(scripts: any) {
       return {
         label: script.filepath,
         absolutePath: script.absolutePath,
+        children: script.children.map((child: any) => ({ label: child.name, detail: child.detail, absolutePath: script.absolutePath })),
         type: 'makefile',
       }
     }

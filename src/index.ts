@@ -1,9 +1,8 @@
 import * as vscode from 'vscode'
 import { watch } from 'chokidar'
-import { addEventListener, message, openFile } from '@vscode-use/utils'
+import { addEventListener, openFile } from '@vscode-use/utils'
 import { getwebviewScript } from '../media/webview'
 import { getwebviewHtml } from '../media/webviewHtml'
-import { readMakefile } from './common'
 import { webviewProvider } from './webviewProvider'
 import { getScripts, transformScriptToTreeData } from './utils'
 
@@ -28,13 +27,8 @@ export async function activate(context: vscode.ExtensionContext) {
       if (type === 'run') {
         if (_value.absolutePath) {
           const makefilePath = `${_value.absolutePath}/Makefile`
-          const commands = await readMakefile(makefilePath)
-          if (!commands.length) {
-            message(`未能在${makefilePath}中找到可以执行的命令`)
-            return
-          }
           // 我电脑没有权限暂时使用sudo make来启动
-          const runCommand = `cd ${_value.absolutePath} && choose=$(echo "${commands.join('\\n')}" | gum filter --placeholder=" 请选择一个命令") && ${auth} make $choose || echo "已取消"`.replace(/\s+/g, ' ')
+          const runCommand = `cd ${_value.absolutePath} && ${auth} make ${_value.label}`.replace(/\s+/g, ' ')
           // 是否已经创建过次终端
           const hasCreatedTerminal = CREATED_TERMINAL.find((_terminal) => {
             const { projectPath, script } = _terminal
