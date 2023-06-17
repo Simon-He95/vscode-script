@@ -522,6 +522,10 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.fixed {
+  position: fixed;
+}
+
 .absolute {
   position: absolute;
 }
@@ -554,6 +558,10 @@ video {
   margin-right: 0.5rem;
 }
 
+.box-border {
+  box-sizing: border-box;
+}
+
 .inline-block {
   display: inline-block;
 }
@@ -572,6 +580,18 @@ video {
 
 .h-\[100vh\] {
   height: 100vh;
+}
+
+.h-\[100px\] {
+  height: 100px;
+}
+
+.h-\[100\%\] {
+  height: 100%;
+}
+
+.h-full {
+  height: 100%;
 }
 
 .w-full {
@@ -594,6 +614,10 @@ video {
   gap: 0.25rem;
 }
 
+.overflow-auto {
+  overflow: auto;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -611,24 +635,13 @@ video {
   background-color: transparent;
 }
 
-.text-\[rgb\(167\2c 134\2c 42\)\] {
-  --tw-text-opacity: 1;
-  color: rgb(167 134 42 / var(--tw-text-opacity));
+.p-8 {
+  padding: 2rem;
 }
 
-.text-\[rgb\(209\2c 121\2c 21\)\] {
-  --tw-text-opacity: 1;
-  color: rgb(209 121 21 / var(--tw-text-opacity));
-}
-
-.text-\[rgb\(253\2c 183\2c 104\)\] {
-  --tw-text-opacity: 1;
-  color: rgb(253 183 104 / var(--tw-text-opacity));
-}
-
-.text-\[rgb\(78\2c 119\2c 244\)\] {
-  --tw-text-opacity: 1;
-  color: rgb(78 119 244 / var(--tw-text-opacity));
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .filter {
