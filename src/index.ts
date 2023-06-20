@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { watch } from 'chokidar'
-import { addEventListener, openFile } from '@vscode-use/utils'
+import { addEventListener, createDebugTerminal, openFile } from '@vscode-use/utils'
 import { getwebviewScript } from '../media/webview'
 import { getwebviewHtml } from '../media/webviewHtml'
 import { webviewProvider } from './webviewProvider'
@@ -69,10 +69,13 @@ export async function activate(context: vscode.ExtensionContext) {
             : `${projectPath}/${_value.relativePath}`
         openFile(absolutePath)
       }
+      else if (type === 'debug') {
+        runTerminal(_value, 'debug')
+      }
     },
   )
 
-  async function runTerminal(args: any) {
+  async function runTerminal(args: any, type?: 'debug') {
     const { label: script, env, workspaceName, projectPath: _projectPath } = args
     let runCommand = ''
     if (projectPath !== _projectPath)
@@ -102,6 +105,8 @@ export async function activate(context: vscode.ExtensionContext) {
           break
       }
     }
+    if (type)
+      return createDebugTerminal(runCommand)
 
     // 是否已经创建过次终端
     const hasCreatedTerminal = CREATED_TERMINAL.find((_terminal) => {

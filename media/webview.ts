@@ -50,6 +50,10 @@ export function getwebviewScript(props: Record<string, any>) {
      view(e, node, data){
       e.stopPropagation()
       vscode.postMessage({ type: 'view', value: JSON.stringify(data) })
+     },
+     debug(e, node, data){
+      e.stopPropagation()
+      vscode.postMessage({ type: 'debug', value: JSON.stringify(data) })
      }
     }
   };

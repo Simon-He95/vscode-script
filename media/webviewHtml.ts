@@ -14,7 +14,7 @@ export function getwebviewHtml() {
       >
         <template #default="{ node, data }">
           <span class="flex items-center w-full">
-            <span @click="run(node, data)" class="w-full">
+            <span @click="run(node, data)" class="flex-1 overflow-auto">
               <span class="flex items-center">
                 <template v-if="data.children">
                   <span class="flex items-center">
@@ -29,11 +29,12 @@ export function getwebviewHtml() {
                     </svg>
                     <span>{{ data.label }}{{data.detail?':':''}}</span>
                   </span>
-                  <span :style="{color:commandDetailColor}" class="overflow-hidden text-ellipsis inline-block w-full" :style="{maxWidth:maxWidth+'px'}">{{ data.detail }}</span>
+                  <span :style="{color:commandDetailColor,maxWidth: maxWidth - 100 + 'px'}" class="overflow-hidden text-ellipsis inline-block w-full" :style="{maxWidth:maxWidth+'px'}">{{ data.detail }}</span>
                 </template>
               </span>
             </span>
-            <svg  v-if="data.children" @click="(e) => view(e, node, data)" t="1686472642323" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="13590" :width="fontSize" :height="fontSize"><path d="M717.499 675.1c32.553-44.735 50.143-98.442 50.143-154.863 0-70.399-27.36-136.587-77.042-186.373-49.698-49.802-115.779-77.229-186.072-77.23-0.004 0 0.004 0 0 0-70.288 0-136.378 27.43-186.074 77.23-49.682 49.785-77.042 115.974-77.043 186.372 0 70.399 27.361 136.588 77.043 186.374 49.699 49.802 115.781 77.229 186.074 77.229 64.156 0 124.798-22.86 172.685-64.715l219.183 219.692c6.949 6.965 15.948 10.515 24.584 10.515 7.456 0 14.642-2.646 20.005-8.025 11.575-11.609 10.451-31.726-2.497-44.705L717.499 675.1z m-212.972 48.74c-54.242 0-105.242-21.171-143.603-59.612-79.232-79.396-79.232-208.584 0-287.981 38.361-38.441 89.361-59.612 143.604-59.612 54.242 0 105.241 21.171 143.601 59.612 79.231 79.397 79.231 208.586 0 287.981-38.36 38.441-89.359 59.612-143.602 59.612z" fill="#d4237a" p-id="13591"></path><path d="M894 60H118c-33 0-60 27-60 60v776c0 33 27 60 60 60h559c16.5 0 30-13.5 30-30s-13.5-30-30-30H118V120h776v557c0 16.5 13.5 30 30 30s30-13.5 30-30V120c0-33-27-60-60-60z" fill="#d4237a" p-id="13592"></path></svg>
+            <svg v-if="data.children" @click="(e) => view(e, node, data)" t="1686472642323" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="13590" :width="fontSize" :height="fontSize"><path d="M717.499 675.1c32.553-44.735 50.143-98.442 50.143-154.863 0-70.399-27.36-136.587-77.042-186.373-49.698-49.802-115.779-77.229-186.072-77.23-0.004 0 0.004 0 0 0-70.288 0-136.378 27.43-186.074 77.23-49.682 49.785-77.042 115.974-77.043 186.372 0 70.399 27.361 136.588 77.043 186.374 49.699 49.802 115.781 77.229 186.074 77.229 64.156 0 124.798-22.86 172.685-64.715l219.183 219.692c6.949 6.965 15.948 10.515 24.584 10.515 7.456 0 14.642-2.646 20.005-8.025 11.575-11.609 10.451-31.726-2.497-44.705L717.499 675.1z m-212.972 48.74c-54.242 0-105.242-21.171-143.603-59.612-79.232-79.396-79.232-208.584 0-287.981 38.361-38.441 89.361-59.612 143.604-59.612 54.242 0 105.241 21.171 143.601 59.612 79.231 79.397 79.231 208.586 0 287.981-38.36 38.441-89.359 59.612-143.602 59.612z" fill="#d4237a" p-id="13591"></path><path d="M894 60H118c-33 0-60 27-60 60v776c0 33 27 60 60 60h559c16.5 0 30-13.5 30-30s-13.5-30-30-30H118V120h776v557c0 16.5 13.5 30 30 30s30-13.5 30-30V120c0-33-27-60-60-60z" fill="#d4237a" p-id="13592"></path></svg>
+            <svg v-if="!data.children && !data.absolutePath" @click="(e) => debug(e, node, data)" xmlns="http://www.w3.org/2000/svg" :width="fontSize" :height="fontSize" viewBox="0 0 24 24"><path d="M15 9a1 1 0 0 1-1-1a1 1 0 0 1 1-1a1 1 0 0 1 1 1a1 1 0 0 1-1 1M9 9a1 1 0 0 1-1-1a1 1 0 0 1 1-1a1 1 0 0 1 1 1a1 1 0 0 1-1 1m7.12-4.63l2.1-2.1l-.82-.83l-2.31 2.31C14.16 3.28 13.11 3 12 3c-1.12 0-2.16.28-3.09.75L6.6 1.44l-.82.83l2.1 2.1C6.14 5.64 5 7.68 5 10v1h14v-1c0-2.32-1.14-4.36-2.88-5.63M5 16c0 3.86 3.13 7 7 7a7 7 0 0 0 7-7v-4H5v4z" fill="#9ffb9d"/></svg>
           </span>
         </template>
       </el-tree>
