@@ -38,7 +38,7 @@
       "activitybar": [
         {
           "id": "scripts",
-          "title": "npm scripts",
+          "title": "脚本",
           "icon": "logo.svg"
         }
       ]
@@ -48,7 +48,7 @@
         {
           "type": "webview",
           "id": "vscode-scripts.id",
-          "name": "npm scripts"
+          "name": "脚本"
         }
       ]
     }
