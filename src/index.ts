@@ -13,14 +13,16 @@ export async function activate(context: vscode.ExtensionContext) {
   let { auth = '', fontSize, labelColor, filePathColor, commandLabelColor, commandDetailColor, iconColor } = vscode.workspace.getConfiguration('vscode-script')
   const projectPath = workspaceFolders[0].uri.fsPath
   const scripts = await getScripts(projectPath)
+  if (!scripts)
+    return
   let treeData = transformScriptToTreeData(scripts)
   const CREATED_TERMINAL: any[] = []
 
   const provider = webviewProvider(
     context, {
-      treeData,
-      fontSize: fontSize ? fontSize.endsWith('px') ? fontSize : `${fontSize}px` : undefined,
-    },
+    treeData,
+    fontSize: fontSize ? fontSize.endsWith('px') ? fontSize : `${fontSize}px` : undefined,
+  },
     async (data) => {
       const { type, value } = data
       const _value = JSON.parse(value)
